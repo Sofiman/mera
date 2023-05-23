@@ -1,14 +1,14 @@
 BUILD := bin
-TARGET := mira
+TARGET := mera
 LIBNAME := lib$(TARGET).a
 TEST_TARGET := $(BUILD)/$(TARGET)_tests
 
 CC := gcc
 CPPFLAGS = -MMD $(INDIRS)
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra `pkg-config --cflags freetype2`
 TESTFLAGS = -O2 -DCRIT_TEST `pkg-config --cflags criterion`
 TESTLD = `pkg-config --libs criterion`
-LDFLAGS := 
+LDFLAGS := `pkg-config --libs freetype2`
 LDLIBS := 
 
 RELEASE := 0

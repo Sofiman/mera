@@ -1,2 +1,4 @@
-bin
-mira
+bin/
+mera
+out.png
+.DS_Store
