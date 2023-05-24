@@ -30,16 +30,27 @@ int main(int argc, char** argv) {
     UNUSED(argv);
 
     M_Token test[] = {
-        M_TOK_INT(1),
-        M_TOK_OP('+'),
-        M_TOK_INT(2),
-        M_TOK_OP('*'),
-        M_TOK_EMPTY,
-        M_TOK_OP('='),
-        M_TOK_INT(3),
+        (M_Token){
+            M_Func,
+            &(M_TokenFuncData){
+                "max", 3,
+                (M_Expr[]){
+                    (M_Expr){
+                        (M_Token[]){ M_TOK_INT(1), M_TOK_OP("+"), M_TOK_INT(2) },
+                        3
+                    },
+                    (M_Expr){
+                        (M_Token[]){ M_TOK_INT(6) },
+                        1
+                    }
+                }, 2
+            }
+        },
+        M_TOK_OP("="),
+        M_TOK_INT(6),
     };
 
-    M_Layout l = M_NewLayout(test, sizeof(test)/sizeof(test[0]));
+    M_Layout l = M_NewLayout(&(M_Expr){test,3});
 
     printf("l = ");
     M_PrintLayout(&l);
@@ -47,11 +58,10 @@ int main(int argc, char** argv) {
 
     printf("l->width = %u\n", l.width);
     printf("l->height = %u\n", l.height);
-    printf("l->token_count = %lu\n", l.token_count);
 
     struct FreeTypeCanvasData ftcd;
     ftcd.magic = FREETYPE_CANVAS_DATA_M;
-    M_Canvas c = { mera_ftc_init, mera_ftc_drawChar, mera_ftc_save, (void*)&ftcd };
+    M_Canvas c = { mera_ftc_init, mera_ftc_drawChar, mera_ftc_measureChar, mera_ftc_save, (void*)&ftcd };
 
     M_RenderLayoutTo(&l, &c);
 

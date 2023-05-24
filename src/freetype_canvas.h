@@ -19,6 +19,7 @@ struct FreeTypeCanvasData {
 
 int mera_ftc_init(size_t u_width, size_t u_height, void* user_data);
 void mera_ftc_drawChar(size_t y, unsigned int codepoint, void* user_data);
+void mera_ftc_measureChar(unsigned int codepoint, void* user_data, size_t* width, size_t* height);
 int mera_ftc_save(void* user_data);
 
 #endif

@@ -120,6 +120,27 @@ int mera_ftc_init(size_t u_width, size_t u_height, void* user_data) {
     return 0;
 }
 
+void mera_ftc_measureChar(unsigned int codepoint, void* user_data, size_t* width, size_t* height) {
+    if (user_data == NULL || *((unsigned short*)user_data) != FREETYPE_CANVAS_DATA_M) {
+        return;
+    }
+    struct FreeTypeCanvasData* ftc = user_data;
+    FT_Face face = ftc->face;
+
+    FT_UInt glyph_index = FT_Get_Char_Index(face, codepoint);
+    int error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+    if (error){
+        fprintf(stderr, "Warning: Error Loading glpyh %d\n", glyph_index);
+        return;
+    }
+    FT_GlyphSlot slot = face->glyph;
+
+    FT_Size_Metrics metrics = face->size->metrics;
+    size_t maxY = (metrics.ascender - metrics.descender) >> 6;
+    *height = slot->bitmap.rows > maxY ? slot->bitmap.rows : maxY;
+    *width = slot->advance.x >> 6;
+}
+
 void mera_ftc_drawChar(size_t y, unsigned int codepoint, void* user_data) {
     if (user_data == NULL || *((unsigned short*)user_data) != FREETYPE_CANVAS_DATA_M) {
         return;

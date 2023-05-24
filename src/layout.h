@@ -6,14 +6,13 @@
 #include <stdio.h>
 
 typedef struct M_Layout {
-    const M_Token* tokens;
-    const size_t token_count;
+    const M_Expr* expr;
 
     unsigned int height;
     unsigned int width;
 } M_Layout;
 
-M_Layout M_NewLayout(const M_Token* tokens, size_t token_count);
+M_Layout M_NewLayout(const M_Expr* expr);
 void M_PrintLayout(const M_Layout* layout);
 void M_RenderLayoutTo(const M_Layout* layout, M_Canvas* canvas);
 
